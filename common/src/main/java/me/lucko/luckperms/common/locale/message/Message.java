@@ -211,6 +211,7 @@ public enum Message {
     INFO_HEADER(
             "{PREFIX}&2Running &b{} v{}&2 by &bLuck&2." + "\n" +
             "{PREFIX}&f-  &3Platform: &f{}" + "\n" +
+            "{PREFIX}&f-  &3Environment: &f{}" + "\n" +
             "{PREFIX}&f-  &3Server Brand: &f{}" + "\n" +
             "{PREFIX}&f-  &3Server Version:" + "\n" +
             "{PREFIX}     &f{}",
