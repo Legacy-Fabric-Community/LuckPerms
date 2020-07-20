@@ -38,7 +38,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.Objects;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class ApiPlayerAdapter<S, P extends S> implements PlayerAdapter<P> {
+public class ApiPlayerAdapter<S, P> implements PlayerAdapter<P> {
     private final UserManager<?> userManager;
     private final ContextManager<S, P> contextManager;
 
@@ -65,12 +65,12 @@ public class ApiPlayerAdapter<S, P extends S> implements PlayerAdapter<P> {
     @Override
     public @NonNull ImmutableContextSet getContext(@NonNull P player) {
         Objects.requireNonNull(player, "player");
-        return this.contextManager.getContext(checkType(player));
+        return this.contextManager.getPlayerContext(checkType(player));
     }
 
     @Override
     public @NonNull QueryOptions getQueryOptions(@NonNull P player) {
         Objects.requireNonNull(player, "player");
-        return this.contextManager.getQueryOptions(checkType(player));
+        return this.contextManager.getPlayerQueryOptions(checkType(player));
     }
 }
