@@ -34,8 +34,6 @@ import me.lucko.luckperms.common.calculator.processor.PermissionProcessor;
 import me.lucko.luckperms.common.calculator.processor.RegexProcessor;
 import me.lucko.luckperms.common.calculator.processor.WildcardProcessor;
 import me.lucko.luckperms.common.config.ConfigKeys;
-import me.lucko.luckperms.fabric.calculator.IntegratedServerProcessor;
-import me.lucko.luckperms.fabric.context.FabricContextManager;
 import net.luckperms.api.query.QueryOptions;
 
 class FabricCalculatorFactory implements CalculatorFactory {
@@ -57,11 +55,6 @@ class FabricCalculatorFactory implements CalculatorFactory {
 
         if (this.plugin.getConfiguration().get(ConfigKeys.APPLYING_WILDCARDS)) {
             processors.add(new WildcardProcessor());
-        }
-
-        boolean integratedOwner = queryOptions.option(FabricContextManager.INTEGRATED_SERVER_OWNER).orElse(false);
-        if (integratedOwner && plugin.getConfiguration().get(ConfigKeys.FABRIC_INTEGRATED_SERVER_OWNER_BYPASSES_CHECKS)) {
-            processors.add(new IntegratedServerProcessor());
         }
 
         return new PermissionCalculator(this.plugin, metadata, processors.build());

@@ -27,13 +27,20 @@ package me.lucko.luckperms.fabric;
 
 import me.lucko.luckperms.common.plugin.scheduler.AbstractJavaScheduler;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
 class FabricSchedulerAdapter extends AbstractJavaScheduler {
     private final Executor serverExecutor;
 
     public FabricSchedulerAdapter(LPFabricBootstrap bootstrap) {
-        this.serverExecutor = r -> bootstrap.getServer().submitAndJoin(r);
+        this.serverExecutor = r -> {
+            try {
+                bootstrap.getServer().submit(r).get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
 
     @Override

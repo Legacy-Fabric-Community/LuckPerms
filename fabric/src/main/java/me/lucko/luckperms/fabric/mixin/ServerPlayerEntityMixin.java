@@ -26,8 +26,10 @@
 package me.lucko.luckperms.fabric.mixin;
 
 import me.lucko.luckperms.fabric.event.PlayerChangeWorldCallback;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -39,12 +41,14 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 abstract class ServerPlayerEntityMixin {
     @Shadow public abstract ServerWorld getServerWorld();
 
+    @Shadow @Final public MinecraftServer server;
+
     @Inject(
             at = @At("TAIL"),
-            method = "dimensionChanged",
+            method = "teleportToDimension",
             locals = LocalCapture.CAPTURE_FAILEXCEPTION
     )
-    private void luckperms_onChangeDimension(ServerWorld targetWorld, CallbackInfo ci) {
-        PlayerChangeWorldCallback.EVENT.invoker().onChangeWorld(this.getServerWorld(), targetWorld, (ServerPlayerEntity) (Object) this);
+    private void luckperms_onChangeDimension(int dimensionId, CallbackInfo ci) {
+        PlayerChangeWorldCallback.EVENT.invoker().onChangeWorld(this.getServerWorld(), server.getWorld(dimensionId), (ServerPlayerEntity) (Object) this);
     }
 }

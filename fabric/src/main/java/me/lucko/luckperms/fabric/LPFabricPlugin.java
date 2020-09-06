@@ -43,20 +43,20 @@ import me.lucko.luckperms.common.tasks.CacheHousekeepingTask;
 import me.lucko.luckperms.common.tasks.ExpireTemporaryTask;
 import me.lucko.luckperms.common.util.MoreFiles;
 import me.lucko.luckperms.fabric.context.FabricContextManager;
-import me.lucko.luckperms.fabric.context.FabricWorldCalculator;
 import me.lucko.luckperms.fabric.event.EarlyLoginCallback;
+import me.lucko.luckperms.fabric.event.PlayerChangeWorldCallback;
 import me.lucko.luckperms.fabric.event.PlayerLoginCallback;
 import me.lucko.luckperms.fabric.event.PlayerQuitCallback;
-import me.lucko.luckperms.fabric.event.PlayerChangeWorldCallback;
 import me.lucko.luckperms.fabric.event.RespawnPlayerCallback;
 import me.lucko.luckperms.fabric.listeners.FabricConnectionListener;
 import me.lucko.luckperms.fabric.listeners.FabricEventListeners;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v1.DispatcherRegistrationCallback;
+import net.fabricmc.fabric.api.command.v1.ServerCommandSource;
 import net.fabricmc.loader.api.ModContainer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.query.QueryOptions;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.command.Console;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;
@@ -69,11 +69,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.greedyString;
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.fabricmc.fabric.api.command.v1.CommandManager.argument;
+import static net.fabricmc.fabric.api.command.v1.CommandManager.literal;
 
 public class LPFabricPlugin extends AbstractLuckPermsPlugin {
-    private static final String[] COMMAND_ALIASES = new String[] { "luckperms", "lp", "perm", "perms", "permission", "permissions" } ;
+    private static final String[] COMMAND_ALIASES = new String[]{"luckperms", "lp", "perm", "perms", "permission", "permissions"};
     @Nullable
     private MinecraftServer server;
     private LPFabricBootstrap bootstrap;
@@ -102,7 +102,7 @@ public class LPFabricPlugin extends AbstractLuckPermsPlugin {
 
         // Command registration also need to occur early, and will persist across game states as well.
         this.commandManager = new FabricCommandExecutor(this);
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+        DispatcherRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
             for (String alias : COMMAND_ALIASES) {
                 LiteralCommandNode<ServerCommandSource> lp = literal(alias)
                         .executes(this.getCommandManager())
@@ -179,7 +179,6 @@ public class LPFabricPlugin extends AbstractLuckPermsPlugin {
     @Override
     protected void setupContextManager() {
         this.contextManager = new FabricContextManager(this);
-        this.contextManager.registerCalculator(new FabricWorldCalculator(this));
     }
 
     @Override
@@ -249,13 +248,13 @@ public class LPFabricPlugin extends AbstractLuckPermsPlugin {
     public Stream<Sender> getOnlineSenders() {
         return Stream.concat(
                 Stream.of(getConsoleSender()),
-                this.getServer().getPlayerManager().getPlayerList().stream().map(serverPlayerEntity -> getSenderFactory().wrap(serverPlayerEntity.getCommandSource()))
+                this.getServer().getPlayerManager().getPlayers().stream().map(serverPlayerEntity -> getSenderFactory().wrap(ServerCommandSource.from(serverPlayerEntity)))
         );
     }
 
     @Override
     public Sender getConsoleSender() {
-        return this.getSenderFactory().wrap(this.getServer().getCommandSource());
+        return this.getSenderFactory().wrap(ServerCommandSource.from(Console.getInstance()));
     }
 
     public FabricSenderFactory getSenderFactory() {

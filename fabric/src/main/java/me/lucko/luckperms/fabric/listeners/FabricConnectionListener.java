@@ -29,7 +29,7 @@ import com.mojang.authlib.GameProfile;
 import me.lucko.luckperms.common.model.User;
 import me.lucko.luckperms.common.plugin.util.AbstractConnectionListener;
 import me.lucko.luckperms.fabric.LPFabricPlugin;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
 public class FabricConnectionListener extends AbstractConnectionListener {
 

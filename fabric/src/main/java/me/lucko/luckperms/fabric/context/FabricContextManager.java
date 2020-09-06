@@ -33,15 +33,13 @@ import me.lucko.luckperms.common.context.QueryOptionsSupplier;
 import me.lucko.luckperms.common.plugin.LuckPermsPlugin;
 import me.lucko.luckperms.common.util.CaffeineFactory;
 import net.luckperms.api.context.ImmutableContextSet;
-import net.luckperms.api.query.OptionKey;
 import net.luckperms.api.query.QueryOptions;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class FabricContextManager extends ContextManager<ServerPlayerEntity, ServerPlayerEntity> {
-    public static final OptionKey<Boolean> INTEGRATED_SERVER_OWNER = OptionKey.of("integrated_server_owner", Boolean.class);
 
     private final LoadingCache<ServerPlayerEntity, QueryOptionsCache<ServerPlayerEntity>> subjectCaches = CaffeineFactory.newBuilder()
             .expireAfterAccess(1, TimeUnit.MINUTES)
@@ -75,10 +73,6 @@ public class FabricContextManager extends ContextManager<ServerPlayerEntity, Ser
     @Override
     public QueryOptions formQueryOptions(ServerPlayerEntity subject, ImmutableContextSet contextSet) {
         QueryOptions.Builder queryOptions = this.plugin.getConfiguration().get(ConfigKeys.GLOBAL_QUERY_OPTIONS).toBuilder();
-        if (subject.getServer().isHost(subject.getGameProfile())) {
-            queryOptions.option(INTEGRATED_SERVER_OWNER, true);
-        }
-
         return queryOptions.context(contextSet).build();
     }
 

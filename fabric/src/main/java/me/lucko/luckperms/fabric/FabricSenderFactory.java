@@ -31,14 +31,16 @@ import me.lucko.luckperms.common.sender.Sender;
 import me.lucko.luckperms.common.sender.SenderFactory;
 import me.lucko.luckperms.common.verbose.event.PermissionCheckEvent;
 import me.lucko.luckperms.fabric.adapter.FabricTextAdapter;
+import net.fabricmc.fabric.api.command.v1.ServerCommandSource;
 import net.kyori.text.Component;
 import net.luckperms.api.query.QueryOptions;
 import net.luckperms.api.util.Tristate;
 import net.minecraft.entity.Entity;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
+import java.util.Optional;
 import java.util.UUID;
 
 class FabricSenderFactory extends SenderFactory<LPFabricPlugin, ServerCommandSource> {
@@ -65,18 +67,22 @@ class FabricSenderFactory extends SenderFactory<LPFabricPlugin, ServerCommandSou
 
     @Override
     protected String getName(ServerCommandSource commandSource) {
-        return commandSource.getName();
+        return Optional.ofNullable(commandSource)
+                .map(ServerCommandSource::getEntity)
+                .map(Entity::getName)
+                .map(Text::getString)
+                .orElse("null");
     }
 
     @Override
     protected void sendMessage(ServerCommandSource commandSource, String s) {
         // Sending to a ServerCommandSource async is always safe
-        commandSource.sendFeedback(new LiteralText(s), false);
+        commandSource.sendFeedback(new LiteralText(s));
     }
 
     @Override
     protected void sendMessage(ServerCommandSource commandSource, Component message) {
-        commandSource.sendFeedback(FabricTextAdapter.convert(message), false);
+        commandSource.sendFeedback(FabricTextAdapter.convert(message));
     }
 
     @Override
@@ -87,7 +93,7 @@ class FabricSenderFactory extends SenderFactory<LPFabricPlugin, ServerCommandSou
 
     @Override
     protected void performCommand(ServerCommandSource sender, String command) {
-        sender.getMinecraftServer().getCommandManager().execute(sender, command);
+        sender.getWorld().method_6055().getCommandManager().execute(sender.getSource(), command);
     }
 
     @Override

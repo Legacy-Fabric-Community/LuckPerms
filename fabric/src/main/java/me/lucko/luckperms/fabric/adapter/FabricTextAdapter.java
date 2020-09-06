@@ -40,6 +40,6 @@ public class FabricTextAdapter {
      * @return Text of the same type as the component, or an empty Text object if not present.
      */
     public static Text convert(Component component) {
-        return Text.Serializer.fromJson(GsonComponentSerializer.INSTANCE.serialize(component));
+        return Text.Serializer.deserialize(GsonComponentSerializer.INSTANCE.serialize(component));
     }
 }

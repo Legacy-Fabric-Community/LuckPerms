@@ -36,8 +36,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.luckperms.api.platform.Platform;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;
@@ -141,12 +141,12 @@ public final class LPFabricBootstrap implements LuckPermsBootstrap, ModInitializ
 
     @Override
     public Path getDataDirectory() {
-        return FabricLoader.getInstance().getGameDir().resolve("mods").resolve("LuckPerms");
+        return FabricLoader.getInstance().getGameDirectory().toPath().resolve("mods").resolve("LuckPerms");
     }
 
     @Override
     public Path getConfigDirectory() {
-        return FabricLoader.getInstance().getConfigDir().resolve("LuckPerms");
+        return FabricLoader.getInstance().getConfigDirectory().toPath().resolve("LuckPerms");
     }
 
     @Override
@@ -197,7 +197,7 @@ public final class LPFabricBootstrap implements LuckPermsBootstrap, ModInitializ
 
     @Override
     public Collection<UUID> getOnlinePlayers() {
-        return this.plugin.getServer().getPlayerManager().getPlayerList().stream().map(PlayerEntity::getUuid).collect(Collectors.toList());
+        return this.plugin.getServer().getPlayerManager().getPlayers().stream().map(PlayerEntity::getUuid).collect(Collectors.toList());
     }
 
     @Override

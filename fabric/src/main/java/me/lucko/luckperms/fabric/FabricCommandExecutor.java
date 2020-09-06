@@ -33,7 +33,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.lucko.luckperms.common.command.CommandManager;
 import me.lucko.luckperms.common.command.utils.ArgumentTokenizer;
 import me.lucko.luckperms.common.sender.Sender;
-import net.minecraft.server.command.ServerCommandSource;
+import net.fabricmc.fabric.api.command.v1.ServerCommandSource;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

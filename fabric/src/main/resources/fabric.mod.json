@@ -24,6 +24,7 @@
     "source": "https://github.com/lucko/LuckPerms",
     "issues": "https://github.com/lucko/LuckPerms/issues"
   },
+  "environment": "server",
   "entrypoints": {
     "main": [
       "me.lucko.luckperms.fabric.LPFabricBootstrap"
@@ -32,13 +33,6 @@
   "mixins": [
     "mixins.luckperms.json"
   ],
-  "depends": {
-    "fabricloader": ">=0.9.0",
-    "fabric-api-base": "*",
-    "fabric-command-api-v1": "*",
-    "fabric-lifecycle-events-v1": "*",
-    "fabric-networking-v0": "*"
-  },
   "custom": {
     "modmenu:api": true
   }

@@ -27,9 +27,8 @@ package me.lucko.luckperms.fabric.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.dimension.DimensionType;
 
 /**
  * TODO: Use Fabric API alternative when merged.

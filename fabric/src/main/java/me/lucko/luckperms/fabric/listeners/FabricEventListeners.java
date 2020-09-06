@@ -26,10 +26,8 @@
 package me.lucko.luckperms.fabric.listeners;
 
 import me.lucko.luckperms.fabric.LPFabricPlugin;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 
 public class FabricEventListeners {
     private final LPFabricPlugin plugin;
